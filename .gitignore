@@ -40,3 +40,25 @@ build/
 
 # debug information files
 *.dwo
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# CMake (when generated outside build/)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+*.user
+Testing/
+.cache/
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*~
+
+# macOS debug symbols
+*.dSYM/
