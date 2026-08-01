@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mini-AES-Cpp — C++ Theory Code Reference</title>
+  <style>
+    :root {
+      --bg: #f7f5f1;
+      --surface: #fffdf9;
+      --ink: #1c1b19;
+      --muted: #5c574f;
+      --line: #d9d2c5;
+      --accent: #0f5c4c;
+      --accent-soft: #e4f0ec;
+      --code-bg: #1e2430;
+      --code-ink: #e8e6e1;
+      --where: #3a4a6b;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 10% 0%, #ebe4d6 0%, transparent 45%),
+        radial-gradient(ellipse at 90% 20%, #dce8e3 0%, transparent 40%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    header.hero {
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    header.hero p.brand {
+      margin: 0 0 0.35rem;
+      font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1 {
+      margin: 0 0 0.6rem;
+      font-size: clamp(1.6rem, 3vw, 2.1rem);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .lede {
+      margin: 0;
+      color: var(--muted);
+      max-width: 40rem;
+    }
+
+    nav.toc {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      margin: 0 0 2rem;
+      padding: 0.85rem 1rem;
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+
+    nav.toc h2 {
+      margin: 0 0 0.5rem;
+      font-size: 0.85rem;
+      font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    nav.toc ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+      gap: 0.15rem 1rem;
+    }
+
+    nav.toc a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.92rem;
+    }
+
+    nav.toc a:hover { text-decoration: underline; }
+
+    section.concept {
+      margin: 0 0 1.5rem;
+      padding: 1.1rem 1.15rem 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      scroll-margin-top: 5.5rem;
+    }
+
+    section.concept h2 {
+      margin: 0 0 0.55rem;
+      font-size: 1.2rem;
+      color: var(--ink);
+    }
+
+    section.concept .theory {
+      margin: 0 0 0.75rem;
+      color: var(--ink);
+    }
+
+    .where {
+      margin: 0 0 0.75rem;
+      padding: 0.55rem 0.7rem;
+      background: var(--accent-soft);
+      border-radius: 4px;
+      font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      color: var(--where);
+    }
+
+    .where strong {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-family: "Iowan Old Style", Palatino, Georgia, serif;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    pre {
+      margin: 0;
+      padding: 0.85rem 1rem;
+      overflow-x: auto;
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border-radius: 4px;
+      font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    code {
+      font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.88em;
+    }
+
+    p code, li code {
+      background: #efe9dd;
+      padding: 0.05em 0.3em;
+      border-radius: 3px;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <p class="brand">Mini-AES-Cpp</p>
+      <h1>C++ Theory Code Reference</h1>
+      <p class="lede">
+        Lookup notes for the C++ concepts and design decisions used in this repository.
+        Each section pairs a short theory note with where it appears in the Mini-AES headers
+        and a snippet adapted from the project.
+      </p>
+    </header>
+
+    <nav class="toc" aria-label="Table of contents">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#cpp20-header-only">C++20 / header-only library</a></li>
+        <li><a href="#namespaces">Namespaces &amp; nested detail</a></li>
+        <li><a href="#pragma-once">#pragma once</a></li>
+        <li><a href="#constexpr">constexpr / compile-time tables</a></li>
+        <li><a href="#inline">inline variables &amp; functions</a></li>
+        <li><a href="#strong-types">Strong types / encapsulation</a></li>
+        <li><a href="#explicit">explicit constructors</a></li>
+        <li><a href="#operators">Operator overloading &amp; friend</a></li>
+        <li><a href="#nodiscard-noexcept">[[nodiscard]] &amp; noexcept</a></li>
+        <li><a href="#factories">static factory methods</a></li>
+        <li><a href="#const-overloads">Const / non-const overloads</a></li>
+        <li><a href="#free-vs-class">Free-function vs class API</a></li>
+        <li><a href="#value-semantics">Value semantics</a></li>
+        <li><a href="#std-array">std::array</a></li>
+        <li><a href="#string-view">std::string_view</a></li>
+        <li><a href="#std-function">std::function callbacks</a></li>
+        <li><a href="#type-alias">Type aliases (using)</a></li>
+        <li><a href="#exceptions">Exceptions for API bounds</a></li>
+        <li><a href="#anon-ns">Anonymous namespace</a></li>
+        <li><a href="#umbrella">Umbrella include</a></li>
+        <li><a href="#design">Project design decisions</a></li>
+      </ol>
+    </nav>
+
+    <section class="concept" id="cpp20-header-only">
+      <h2>C++20 / header-only library</h2>
+      <p class="theory">
+        The project targets <strong>C++20</strong> (<code>CMAKE_CXX_STANDARD 20</code>).
+        Almost all logic lives in headers included by the single translation unit
+        <code>source/main.cpp</code>. That style (header-only) keeps the educational cipher
+        easy to browse: open a <code>.hpp</code> and you see the full implementation—no
+        separate <code>.cpp</code> library objects to link.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        CMakeLists.txt · include/mini_aes/*.hpp · source/main.cpp
+      </div>
+      <pre>set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_executable(mini_aes source/main.cpp)
+target_include_directories(mini_aes PRIVATE include)</pre>
+    </section>
+
+    <section class="concept" id="namespaces">
+      <h2>Namespaces &amp; nested <code>detail</code></h2>
+      <p class="theory">
+        A <strong>namespace</strong> groups related names and avoids collisions with other
+        libraries. Nested <code>detail</code> (or <code>mini_aes::detail</code>) is a common
+        convention for implementation helpers that callers should not treat as public API—
+        for example the GF multiply table builder or MixColumn helpers.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/gf16.hpp · include/mini_aes/transforms.hpp
+      </div>
+      <pre>namespace mini_aes::detail {
+inline constexpr auto kGf16MulTable = build_gf16_mul_table();
+} // namespace mini_aes::detail
+
+namespace mini_aes {
+class Nibble { /* ... */ };
+}</pre>
+    </section>
+
+    <section class="concept" id="pragma-once">
+      <h2><code>#pragma once</code></h2>
+      <p class="theory">
+        An include guard: the preprocessor includes the header at most once per translation
+        unit. Equivalent in spirit to classic <code>#ifndef</code> / <code>#define</code> guards,
+        with less boilerplate. Every Mini-AES header starts with it.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        All files under include/mini_aes/
+      </div>
+      <pre>#pragma once
+
+#include &lt;array&gt;
+#include &lt;cstdint&gt;</pre>
+    </section>
+
+    <section class="concept" id="constexpr">
+      <h2><code>constexpr</code> / compile-time tables</h2>
+      <p class="theory">
+        <code>constexpr</code> means a function or variable <em>can</em> be evaluated at
+        compile time. Here, the full 16×16 GF(2⁴) multiplication table and the inverse
+        S-box are built when the program is compiled, so runtime only does O(1) lookups—
+        no bit-serial polynomial multiply in the hot path.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/gf16.hpp (<code>build_gf16_mul_table</code>) ·
+        include/mini_aes/sbox.hpp (<code>build_inv_sbox</code>)
+      </div>
+      <pre>inline constexpr std::array&lt;std::array&lt;std::uint8_t, 16&gt;, 16&gt;
+build_gf16_mul_table() noexcept {
+    std::array&lt;std::array&lt;std::uint8_t, 16&gt;, 16&gt; table{};
+    constexpr std::uint8_t modulus = 0x13; // x^4 + x + 1
+    // ... fill table[a][b] ...
+    return table;
+}
+
+inline constexpr auto kGf16MulTable = build_gf16_mul_table();</pre>
+    </section>
+
+    <section class="concept" id="inline">
+      <h2><code>inline</code> variables &amp; functions</h2>
+      <p class="theory">
+        In headers, <code>inline</code> on a function (or C++17+ <code>inline</code> variable)
+        allows the same definition to appear in multiple translation units without violating
+        the One Definition Rule. Essential for a header-only library: tables like
+        <code>kSBox</code> and free transforms like <code>nibble_sub</code> are defined in
+        headers safely.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/sbox.hpp · include/mini_aes/transforms.hpp · gf16.hpp tables
+      </div>
+      <pre>inline constexpr std::array&lt;std::uint8_t, 16&gt; kSBox = { /* ... */ };
+
+[[nodiscard]] inline State nibble_sub(const State&amp; input,
+                                      bool inverse = false) noexcept;</pre>
+    </section>
+
+    <section class="concept" id="strong-types">
+      <h2>Strong types / encapsulation</h2>
+      <p class="theory">
+        Wrapping a raw <code>uint8_t</code> in <code>class Nibble</code> (and a 16-bit block
+        in <code>State</code>, the API in <code>Cipher</code>) makes invalid states harder:
+        masking to 4 bits happens in the constructor, and field operations are methods/
+        operators on the type—not ad-hoc bit fiddling at every call site.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/gf16.hpp (<code>Nibble</code>) · state.hpp · cipher.hpp · key_schedule.hpp
+      </div>
+      <pre>class Nibble {
+public:
+    static constexpr std::uint8_t kMask = 0x0F;
+    explicit constexpr Nibble(std::uint8_t value) noexcept
+        : value_(value &amp; kMask) {}
+    [[nodiscard]] constexpr std::uint8_t value() const noexcept { return value_; }
+private:
+    std::uint8_t value_ = 0;
+};</pre>
+    </section>
+
+    <section class="concept" id="explicit">
+      <h2><code>explicit</code> constructors</h2>
+      <p class="theory">
+        <code>explicit</code> blocks implicit conversions. Without it,
+        <code>Nibble n = 5;</code> or passing an integer where a <code>Cipher</code> is
+        expected could happen silently. Callers must write
+        <code>Nibble{5}</code> / <code>Cipher(key)</code> on purpose.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        Nibble, State, KeySchedule, Cipher constructors
+      </div>
+      <pre>explicit Cipher(std::uint16_t secret_key) : schedule_(secret_key) {}
+explicit KeySchedule(std::uint16_t secret_key);</pre>
+    </section>
+
+    <section class="concept" id="operators">
+      <h2>Operator overloading &amp; <code>friend</code></h2>
+      <p class="theory">
+        Overloading <code>+</code> and <code>*</code> lets GF(2⁴) arithmetic read like math:
+        addition is XOR, multiplication is table lookup. Declaring binary operators as
+        <code>friend</code> (or free functions) keeps left/right operands symmetric and
+        allows access to private <code>value_</code> when needed.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/gf16.hpp
+      </div>
+      <pre>[[nodiscard]] friend constexpr Nibble operator+(Nibble lhs, Nibble rhs) noexcept {
+    return Nibble{static_cast&lt;std::uint8_t&gt;(lhs.value_ ^ rhs.value_)};
+}
+
+[[nodiscard]] friend constexpr Nibble operator*(Nibble lhs, Nibble rhs) noexcept {
+    return Nibble{detail::kGf16MulTable[lhs.value_][rhs.value_]};
+}</pre>
+    </section>
+
+    <section class="concept" id="nodiscard-noexcept">
+      <h2><code>[[nodiscard]]</code> &amp; <code>noexcept</code></h2>
+      <p class="theory">
+        <code>[[nodiscard]]</code> warns if a return value is ignored—important for pure
+        transforms that return a new <code>State</code>. <code>noexcept</code> promises the
+        function will not throw, which helps optimizers and documents intent for small
+        value-type operations that only do arithmetic and table lookups.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        Widespread across gf16.hpp, sbox.hpp, state.hpp, transforms.hpp, cipher.hpp
+      </div>
+      <pre>[[nodiscard]] inline State shift_row(const State&amp; input) noexcept {
+    const auto&amp; n = input.nibbles();
+    return State::from_nibbles(n[0], n[3], n[2], n[1]);
+}</pre>
+    </section>
+
+    <section class="concept" id="factories">
+      <h2><code>static</code> factory methods</h2>
+      <p class="theory">
+        Named static constructors (<code>from_uint16</code>, <code>from_nibbles</code>)
+        document how a value is built better than overloaded constructors alone, and keep
+        packing/unpacking logic next to the type that owns the representation.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/state.hpp
+      </div>
+      <pre>[[nodiscard]] static constexpr State from_uint16(std::uint16_t block) noexcept {
+    return State{{Nibble{static_cast&lt;std::uint8_t&gt;(block &gt;&gt; 12)},
+                  Nibble{static_cast&lt;std::uint8_t&gt;((block &gt;&gt; 8) &amp; 0x0F)},
+                  Nibble{static_cast&lt;std::uint8_t&gt;((block &gt;&gt; 4) &amp; 0x0F)},
+                  Nibble{static_cast&lt;std::uint8_t&gt;(block &amp; 0x0F)}}};
+}</pre>
+    </section>
+
+    <section class="concept" id="const-overloads">
+      <h2>Const / non-const overloads</h2>
+      <p class="theory">
+        Providing both <code>const</code> and non-<code>const</code> accessors lets
+        read-only code use <code>const State&amp;</code> safely while mutating code (e.g.
+        MixColumn writing columns) gets a reference. The compiler picks the overload from
+        the object’s constness.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/state.hpp (<code>column_top</code>, <code>column_bottom</code>, <code>nibbles</code>)
+      </div>
+      <pre>[[nodiscard]] constexpr Nibble column_top(std::size_t column) const noexcept;
+[[nodiscard]] constexpr Nibble&amp; column_top(std::size_t column) noexcept;</pre>
+    </section>
+
+    <section class="concept" id="free-vs-class">
+      <h2>Free-function API vs class API</h2>
+      <p class="theory">
+        Round transforms are <strong>free functions</strong> (<code>nibble_sub</code>,
+        <code>shift_row</code>, …): they are pure mappings on <code>State</code> with no
+        long-lived identity. <code>Cipher</code> / <code>KeySchedule</code> are
+        <strong>classes</strong> because they own configuration (the expanded keys) and
+        expose a higher-level operation. Mixing both styles keeps low-level steps composable
+        and the public encrypt/decrypt surface small.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/transforms.hpp · include/mini_aes/cipher.hpp
+      </div>
+      <pre>// Free transform
+[[nodiscard]] inline State mix_column(const State&amp; input) noexcept;
+
+// Class facade
+class Cipher {
+    [[nodiscard]] std::uint16_t encrypt(std::uint16_t plaintext,
+                                        TraceCallback trace = {}) const;
+};</pre>
+    </section>
+
+    <section class="concept" id="value-semantics">
+      <h2>Value semantics (return new state)</h2>
+      <p class="theory">
+        Transforms take <code>const State&amp;</code> and return a new <code>State</code>
+        instead of mutating in place. That makes each step easy to reason about and to
+        print in a trace: the previous matrix is unchanged after the call. For a 4-nibble
+        state the copy cost is negligible.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/transforms.hpp · Cipher::encrypt / decrypt pipelines
+      </div>
+      <pre>state = nibble_sub(state);
+state = shift_row(state);
+state = mix_column(state);
+state = add_round_key(state, schedule_.round_key(1));</pre>
+    </section>
+
+    <section class="concept" id="std-array">
+      <h2><code>std::array</code></h2>
+      <p class="theory">
+        Fixed-size, stack-friendly container with value semantics and <code>constexpr</code>
+        support. Preferred here over C arrays or <code>std::vector</code> because nibble
+        counts, S-box size, and round-key count are known at compile time.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        GF table, S-boxes, State nibbles, KeySchedule::round_keys_
+      </div>
+      <pre>std::array&lt;State, kRoundKeyCount&gt; round_keys_{};
+inline constexpr std::array&lt;std::uint8_t, 16&gt; kSBox = { /* 16 entries */ };</pre>
+    </section>
+
+    <section class="concept" id="string-view">
+      <h2><code>std::string_view</code></h2>
+      <p class="theory">
+        A non-owning view of a character sequence. Trace labels are string literals or
+        temporary views—no need to allocate a <code>std::string</code> for every step.
+        Lifetime: the view must not outlive the characters it points to (fine for literals).
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/state.hpp · include/mini_aes/cipher.hpp · source/main.cpp
+      </div>
+      <pre>void print_trace(std::string_view label, std::ostream&amp; out = std::cout) const {
+    out &lt;&lt; label &lt;&lt; '\n';
+    print(out);
+}</pre>
+    </section>
+
+    <section class="concept" id="std-function">
+      <h2><code>std::function</code> callbacks</h2>
+      <p class="theory">
+        Type-erased callable wrapper. <code>TraceCallback</code> can bind a free function,
+        lambda, or functor. Default-constructed <code>{}</code> is empty; the cipher checks
+        <code>if (trace)</code> before calling—so tracing is optional with zero API surface
+        for callers who skip it.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/cipher.hpp · source/main.cpp
+      </div>
+      <pre>using TraceCallback = std::function&lt;void(std::string_view, const State&amp;)&gt;;
+
+static void trace_step(const TraceCallback&amp; trace,
+                       std::string_view label,
+                       const State&amp; state) {
+    if (trace) {
+        trace(label, state);
+    }
+}</pre>
+    </section>
+
+    <section class="concept" id="type-alias">
+      <h2>Type aliases (<code>using</code>)</h2>
+      <p class="theory">
+        <code>using TraceCallback = ...</code> gives a readable name to a long template type
+        and keeps the public typedef next to the class that owns the policy.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/cipher.hpp
+      </div>
+      <pre>class Cipher {
+public:
+    using TraceCallback = std::function&lt;void(std::string_view label,
+                                             const State&amp; state)&gt;;
+};</pre>
+    </section>
+
+    <section class="concept" id="exceptions">
+      <h2>Exceptions for API bounds</h2>
+      <p class="theory">
+        <code>KeySchedule::round_key</code> throws <code>std::out_of_range</code> if the
+        round index is not 0..2. That turns a programming mistake into a clear failure
+        instead of undefined behavior from an unchecked array index. The encrypt/decrypt
+        paths only use valid indices, so the throw is a guard for external callers.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/key_schedule.hpp
+      </div>
+      <pre>[[nodiscard]] const State&amp; round_key(std::size_t round) const {
+    if (round &gt;= kRoundKeyCount) {
+        throw std::out_of_range("Mini-AES supports round keys 0..2 only");
+    }
+    return round_keys_[round];
+}</pre>
+    </section>
+
+    <section class="concept" id="anon-ns">
+      <h2>Anonymous namespace</h2>
+      <p class="theory">
+        <code>namespace { ... }</code> in a <code>.cpp</code> file gives internal linkage:
+        helpers are invisible to other translation units (like <code>static</code> at file
+        scope). Used in <code>main.cpp</code> for print/trace helpers that are not part of
+        the library API.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        source/main.cpp
+      </div>
+      <pre>namespace {
+
+void print_header() { /* ... */ }
+void trace_state(std::string_view label, const mini_aes::State&amp; state) {
+    state.print_trace(label);
+}
+
+} // namespace</pre>
+    </section>
+
+    <section class="concept" id="umbrella">
+      <h2>Umbrella include</h2>
+      <p class="theory">
+        <code>mini_aes.hpp</code> re-includes the public headers so a client can write a
+        single <code>#include "mini_aes/mini_aes.hpp"</code>. The demo includes
+        <code>cipher.hpp</code> directly instead—either style is fine; the umbrella is for
+        convenience when you want the whole library.
+      </p>
+      <div class="where">
+        <strong>Where used</strong>
+        include/mini_aes/mini_aes.hpp
+      </div>
+      <pre>#pragma once
+#include "cipher.hpp"
+#include "gf16.hpp"
+#include "key_schedule.hpp"
+#include "sbox.hpp"
+#include "state.hpp"
+#include "transforms.hpp"</pre>
+    </section>
+
+    <section class="concept" id="design">
+      <h2>Project design decisions</h2>
+      <p class="theory">
+        Beyond language features, a few intentional choices shape the code:
+      </p>
+      <ul>
+        <li>
+          <strong>Compile-time GF table</strong> — replaces a long bit-serial multiply loop
+          with <code>kGf16MulTable[a][b]</code>; easier to teach field arithmetic once, then
+          trust O(1) ops in MixColumn.
+        </li>
+        <li>
+          <strong>Self-inverse π and θ</strong> — ShiftRow and MixColumn are their own
+          inverses on this 2×2 layout / matrix, so decryption reuses the same functions
+          (only NibbleSub needs <code>inv_sbox</code>).
+        </li>
+        <li>
+          <strong>Optional trace callback</strong> — teaching and debugging without
+          <code>#ifdef</code> or separate “verbose” cipher types; empty
+          <code>std::function</code> means no overhead beyond one null check per step.
+        </li>
+        <li>
+          <strong>Separation of concerns</strong> — field, S-box, state, transforms, key
+          schedule, and cipher each get a header so the process in PLAN.md maps 1:1 to files.
+        </li>
+      </ul>
+      <div class="where">
+        <strong>Where used</strong>
+        Cross-cutting · see also ../PLAN.md
+      </div>
+      <pre>// Final round omits MixColumn (AES-like structure)
+state = nibble_sub(state);
+state = shift_row(state);
+state = add_round_key(state, schedule_.round_key(2));</pre>
+    </section>
+
+    <footer>
+      <p>
+        Related docs:
+        <a href="../README.md">README.md</a> ·
+        <a href="../PLAN.md">PLAN.md</a>
+      </p>
+      <p>Mini-AES educational cipher — not for production use.</p>
+    </footer>
+  </div>
+</body>
+</html>

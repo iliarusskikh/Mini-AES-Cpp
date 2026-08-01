@@ -4,7 +4,16 @@ A modern **C++20** implementation of **Mini-AES** — a compact, educational 16-
 
 Mini-AES preserves the structure of the real AES (Rijndael) while shrinking every parameter so the algorithm can be traced by hand. **It is not secure for production use.**
 
-The original C reference implementation lives in `source/main.c`. This project refactors that code into typed, header-only C++ modules with encryption, decryption, and a step-by-step trace demo.
+This repository is a typed, header-only C++ rewrite with encryption, decryption, and a step-by-step trace demo.
+
+---
+
+## Docs
+
+| Document | Purpose |
+|----------|---------|
+| [PLAN.md](PLAN.md) | What the simulation does: data model, key schedule, encrypt/decrypt steps, demo flow |
+| [theory/Theory_CodeRef.html](theory/Theory_CodeRef.html) | Lookup notes for C++ concepts and design decisions used in this codebase |
 
 ---
 
@@ -61,7 +70,14 @@ include/mini_aes/
 
 source/
   main.cpp          # Demo: paper Example 9 with trace output
-  main.c            # Original C implementation (reference)
+
+theory/
+  Theory_CodeRef.html  # C++ theory lookup tied to this code
+
+CMakeLists.txt
+PLAN.md             # Process guide for the simulation
+LICENSE
+README.md
 ```
 
 ---
@@ -88,14 +104,16 @@ The demo encrypts and decrypts the **Example 9** test vector from the paper:
 
 ## C++ Design Notes
 
-Compared to the original C code, this implementation:
+Design choices in this implementation:
 
 - **Encapsulates state** in a `State` class with the paper's column-oriented matrix layout
-- **Uses `constexpr` lookup tables** for GF(2⁴) multiplication (replacing ~300 lines of bit-serial polynomial math)
+- **Uses `constexpr` lookup tables** for GF(2⁴) multiplication instead of runtime bit-serial polynomial math
 - **Separates concerns** into focused headers (field arithmetic, transforms, key schedule, cipher)
 - **Provides type-safe `Nibble` values** instead of raw `uint8_t` with manual masking
 - **Implements full decryption**, not just encryption
 - **Supports optional trace callbacks** for teaching / debugging intermediate states
+
+For a concept-by-concept walkthrough, open [theory/Theory_CodeRef.html](theory/Theory_CodeRef.html).
 
 ### Quick API Example
 
@@ -119,7 +137,7 @@ cipher.encrypt(0x9C63, [](std::string_view label, const mini_aes::State& state) 
 
 ## Reference
 
-- Phan, R. C.-W. (2002). *Mini Advanced Encryption Standard (Mini-AES): A Testbed for Cryptanalysis Students.* Cryptologia, 26(4). See `miniAES.pdf` in this repository.
+- Phan, R. C.-W. (2002). *Mini Advanced Encryption Standard (Mini-AES): A Testbed for Cryptanalysis Students.* Cryptologia, 26(4). Spec PDF: [mini-aes-spec.pdf](https://people.utm.my/rashidah/wp-content/uploads/sites/729/2017/03/mini-aes-spec.pdf).
 - The paper also describes the **Square attack** on an extended 4-round variant — useful for cryptanalysis coursework.
 
 ---
